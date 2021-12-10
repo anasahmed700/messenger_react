@@ -13,7 +13,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 import Avatar from "@material-ui/core/Avatar";
 import Fab from "@material-ui/core/Fab";
 import SendIcon from "@material-ui/icons/Send";
-// import {apiClient} from '../Shared/apiClient'
+import { apiClient } from "../Shared/apiClient";
 // import { client } from "../Shared/MessengerClient";
 
 const useStyles = makeStyles({
@@ -40,6 +40,25 @@ const Chat = () => {
   const classes = useStyles();
   const [data, setData] = useState();
 
+  apiClient
+    .get("conversations", {
+      params: {
+        fields: "messages{message,from}",
+      },
+    })
+    .then((res) => {
+      if (res.data) {
+        setData(res.data);
+      }
+    })
+    .catch((err) => {
+      console.log(err.response);
+    });
+
+  //   useEffect(() => {
+  //       setData()
+
+  //   },[result])
   return (
     <div>
       <Grid container>
@@ -73,60 +92,46 @@ const Chat = () => {
           </Grid>
           <Divider />
           <List>
-            <ListItem button key="RemySharp">
-              <ListItemIcon>
-                <Avatar
-                  alt="Remy Sharp"
-                  src="https://material-ui.com/static/images/avatar/1.jpg"
-                />
-              </ListItemIcon>
-              <ListItemText primary="Remy Sharp">Remy Sharp</ListItemText>
-              <ListItemText secondary="online" align="right"></ListItemText>
-            </ListItem>
+            {data?.data &&
+              data?.data?.map((obj, index) => (
+                //   console.log(obj.messages.data[index].from.name)
+                <ListItem button key={index}>
+                  <ListItemIcon>
+                    <Avatar
+                      alt={obj.messages.data[index].from.name}
+                      src="https://material-ui.com/static/images/avatar/1.jpg"
+                    />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={obj.messages.data[index].from.name}
+                  ></ListItemText>
+                  <ListItemText secondary="online" align="right"></ListItemText>
+                </ListItem>
+              ))}
           </List>
         </Grid>
 
         <Grid item xs={9}>
           <List className={classes.messageArea}>
-            <ListItem key="1">
-              <Grid container>
-                <Grid item xs={12}>
-                  <ListItemText
-                    align="right"
-                    primary="Hey man, What's up ?"
-                  ></ListItemText>
-                </Grid>
-                <Grid item xs={12}>
-                  <ListItemText align="right" secondary="09:30"></ListItemText>
-                </Grid>
-              </Grid>
-            </ListItem>
-            <ListItem key="2">
-              <Grid container>
-                <Grid item xs={12}>
-                  <ListItemText
-                    align="left"
-                    primary="Hey, Iam Good! What about you ?"
-                  ></ListItemText>
-                </Grid>
-                <Grid item xs={12}>
-                  <ListItemText align="left" secondary="09:31"></ListItemText>
-                </Grid>
-              </Grid>
-            </ListItem>
-            <ListItem key="3">
-              <Grid container>
-                <Grid item xs={12}>
-                  <ListItemText
-                    align="right"
-                    primary="Cool. i am good, let's catch up!"
-                  ></ListItemText>
-                </Grid>
-                <Grid item xs={12}>
-                  <ListItemText align="right" secondary="10:30"></ListItemText>
-                </Grid>
-              </Grid>
-            </ListItem>
+            {data?.data &&
+              data?.data?.map((obj, index) => (
+                <ListItem key="1">
+                  <Grid container>
+                    <Grid item xs={12}>
+                      <ListItemText
+                        align="right"
+                        primary={obj.messages.data[index].message}
+                      ></ListItemText>
+                    </Grid>
+                    <Grid item xs={12}>
+                      <ListItemText
+                        align="right"
+                        secondary="09:30"
+                      ></ListItemText>
+                    </Grid>
+                  </Grid>
+                </ListItem>
+              ))}
           </List>
           <Divider />
           <Grid container style={{ padding: "20px" }}>

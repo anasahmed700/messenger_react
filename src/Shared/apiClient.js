@@ -6,9 +6,9 @@ export const apiClient = axios.create({
     // headers: {
     //     'Accept': 'application/json',
     // },
-    params : {
-      fields : "messages{message,from}"
-    }
+    // params : {
+    //   fields : "messages{message,from}"
+    // }
     
 });
 apiClient.interceptors.request.use((config) => {
