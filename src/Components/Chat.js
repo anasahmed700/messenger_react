@@ -39,9 +39,10 @@ const useStyles = makeStyles({
 const Chat = () => {
   const classes = useStyles();
   const [data, setData] = useState();
+  const [conversation, setConversation] = useState();
 
   apiClient
-    .get("conversations", {
+    .get("106251218572555/conversations", {
       params: {
         fields: "messages{message,from}",
       },
@@ -55,10 +56,26 @@ const Chat = () => {
       console.log(err.response);
     });
 
-  //   useEffect(() => {
-  //       setData()
+    useEffect(() => {
+      if(conversation != undefined){
+        
+        apiClient
+      .get(conversation, {
+        params: {
+          fields: "messages{message,from}",
+        },
+        headers: { Authorization: `Bearer EAARLfNIV5TMBAIJDkglxPl5Af3ujAO2ZAZAwfXkN0ZAS6xHcWz5au1H9YPr1kctm1nXn7p9csOUZCcYj7XXbLLUANG8ktxTlukVLU0aaEfURPJaR3L5N9oZASMBGwZC7ezWIOa4A4xOZCyPkPjpyMiY6T228xjqFsrMyZCGC3HYZCLVguAvvuXZCkizKdCnVqazaNRrDfCok1LQwgKQzhtKMcYVXoOFodzToAZD` }
+      })
+      .then((res) => {
+        // console.log(res.data.messages)
+        setConversation(res.data)
+      })
+      .catch((err) => {
+        console.log(err.response);
+      });
+      }
+    },[conversation])
 
-  //   },[result])
   return (
     <div>
       <Grid container>
@@ -95,7 +112,7 @@ const Chat = () => {
             {data?.data &&
               data?.data?.map((obj, index) => (
                 //   console.log(obj.messages.data[index].from.name)
-                <ListItem button key={index}>
+                <ListItem button key={index} onClick={()=>{setConversation(obj.id)}}>
                   <ListItemIcon>
                     <Avatar
                       alt={obj.messages.data[index].from.name}
@@ -113,19 +130,19 @@ const Chat = () => {
 
         <Grid item xs={9}>
           <List className={classes.messageArea}>
-            {data?.data &&
-              data?.data?.map((obj, index) => (
-                <ListItem key="1">
+            {conversation?.messages?.data &&
+              conversation?.messages?.data?.map((obj, index) => (
+                <ListItem key={index}>
                   <Grid container>
                     <Grid item xs={12}>
                       <ListItemText
-                        align="right"
-                        primary={obj.messages.data[index].message}
+                        align={obj.from.name === "TCL Test" ? "left" : "right"}
+                        primary={obj.message}
                       ></ListItemText>
                     </Grid>
                     <Grid item xs={12}>
                       <ListItemText
-                        align="right"
+                        align={obj.from.name === "TCL Test" ? "left" : "right"}
                         secondary="09:30"
                       ></ListItemText>
                     </Grid>
