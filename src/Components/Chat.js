@@ -14,7 +14,7 @@ import Avatar from "@material-ui/core/Avatar";
 import Fab from "@material-ui/core/Fab";
 import SendIcon from "@material-ui/icons/Send";
 import { apiClient } from "../Shared/apiClient";
-// import { client } from "../Shared/MessengerClient";
+import { client } from "../Shared/MessengerClient";
 
 const useStyles = makeStyles({
   table: {
@@ -161,13 +161,13 @@ const Chat = () => {
             </Grid>
             <Grid xs={1} align="right">
               <Fab
-                // onClick={() =>
-                //   client
-                //     .sendText("5014327021913292", "Hello World")
-                //     .then(() => {
-                //       console.log("sent");
-                //     })
-                // }
+                onClick={() =>
+                  client
+                    .sendText("5014327021913292", "Hello World")
+                    .then(() => {
+                      console.log("sent");
+                    })
+                }
                 color="primary"
                 aria-label="add"
               >
